@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Library Management</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <h1>Library Management System</h1>
+
+    <!-- Add Book Form -->
+    <div id="book-form">
+        <input type="text" id="title" placeholder="Title" required>
+        <input type="text" id="author" placeholder="Author" required>
+        <input type="number" id="year" placeholder="Year" required>
+        <button onclick="addBook()">Add Book</button>
+    </div>
+
+    <!-- Update Book Form -->
+    <div id="update-form">
+        <input type="number" id="update-id" placeholder="Book ID to update" required>
+        <input type="text" id="update-title" placeholder="New Title">
+        <input type="text" id="update-author" placeholder="New Author">
+        <input type="number" id="update-year" placeholder="New Year">
+        <button onclick="updateBook()">Update Book</button>
+    </div>
+
+    <h2>Books</h2>
+    <ol id="book-list"></ol>
+
+    <script src="/static/app.js"></script>
+</body>
+</html>
