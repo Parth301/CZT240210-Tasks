@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, render_template, redirect, url_for
+from flask import Flask, request, jsonify, render_template
 
 app = Flask(__name__)
 
@@ -24,31 +24,54 @@ books = [
     {"id": 19, "title": "Anna Karenina", "author": "Leo Tolstoy", "year": 1877},
     {"id": 20, "title": "One Hundred Years of Solitude", "author": "Gabriel García Márquez", "year": 1967},
     {"id": 21, "title": "The Divine Comedy", "author": "Dante Alighieri", "year": 1320},
-    {"id": 22, "title": "Dracula", "author": "Bram Stoker", "year": 1897},
-    {"id": 23, "title": "Frankenstein", "author": "Mary Shelley", "year": 1818},
-    {"id": 24, "title": "The Picture of Dorian Gray", "author": "Oscar Wilde", "year": 1890},
-    {"id": 25, "title": "Ulysses", "author": "James Joyce", "year": 1922},
-    {"id": 26, "title": "The Metamorphosis", "author": "Franz Kafka", "year": 1915},
-    {"id": 27, "title": "Alice's Adventures in Wonderland", "author": "Lewis Carroll", "year": 1865},
+    {"id": 22, "title": "Les Misérables", "author": "Victor Hugo", "year": 1862},
+    {"id": 23, "title": "Dracula", "author": "Bram Stoker", "year": 1897},
+    {"id": 24, "title": "Frankenstein", "author": "Mary Shelley", "year": 1818},
+    {"id": 25, "title": "The Picture of Dorian Gray", "author": "Oscar Wilde", "year": 1890},
+    {"id": 26, "title": "Don Quixote", "author": "Miguel de Cervantes", "year": 1605},
+    {"id": 27, "title": "Ulysses", "author": "James Joyce", "year": 1922},
+    {"id": 28, "title": "Madame Bovary", "author": "Gustave Flaubert", "year": 1857},
+    {"id": 29, "title": "The Metamorphosis", "author": "Franz Kafka", "year": 1915},
+    {"id": 30, "title": "Alice's Adventures in Wonderland", "author": "Lewis Carroll", "year": 1865},
 ]
-@app.route("/")
-def home():
-    return render_template("index.html", books=books)
 
-@app.route("/add", methods=["POST"])
+@app.route("/books", methods=["GET"])
+def get_books():
+    return jsonify(books)
+
+@app.route("/books/<int:book_id>", methods=["GET"])
+def get_book(book_id):
+    book = next((b for b in books if b["id"] == book_id), None)
+    if book:
+        return jsonify(book)
+    return jsonify({"error": "Book not found"}), 404
+
+@app.route("/books", methods=["POST"])
 def add_book():
-    title = request.form.get("title")
-    author = request.form.get("author")
-    year = request.form.get("year")
-    new_id = books[-1]["id"] + 1 if books else 1
-    books.append({"id": new_id, "title": title, "author": author, "year": int(year)})
-    return redirect(url_for("home"))
+    new_book = request.json
+    new_book["id"] = books[-1]["id"] + 1 if books else 1
+    books.append(new_book)
+    return jsonify(new_book), 201
 
-@app.route("/delete/<int:book_id>", methods=["POST"])
+@app.route("/books/<int:book_id>", methods=["PUT"])
+def update_book(book_id):
+    book = next((b for b in books if b["id"] == book_id), None)
+    if not book:
+        return jsonify({"error": "Book not found"}), 404
+    data = request.json
+    book.update(data)
+    return jsonify(book)
+
+@app.route("/books/<int:book_id>", methods=["DELETE"])
 def delete_book(book_id):
     global books
-    books = [book for book in books if book["id"] != book_id]
-    return redirect(url_for("home"))
+    books = [b for b in books if b["id"] != book_id]
+    return jsonify({"message": "Book deleted"}), 200
+
+@app.route("/")
+def home():
+    return render_template("index.html")
 
 if __name__ == "__main__":
     app.run(debug=True)
+
