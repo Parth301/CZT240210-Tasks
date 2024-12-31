@@ -18,7 +18,6 @@ def update_student(name, age=None, grades=None):
 def delete_student(name):
     return students.pop(name, "Student not found.")
 
-# Example operations
 add_student("Alice", 20, [90, 85, 88])
 print(view_student("Alice"))
 update_student("Alice", grades=[95, 92])
