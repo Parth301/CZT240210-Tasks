@@ -10,7 +10,6 @@ class Student:
     def calculate_average(self):
         return sum(self.grades) / len(self.grades)
 
-# Example usage
 student = Student("Bob", 21, [85, 90, 80])
 student.display_details()
 print(f"Average Grade: {student.calculate_average()}")
