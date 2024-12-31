@@ -1,5 +1,5 @@
 def is_palindrome(s):
-    s = s.lower().replace(" ", "")  # Normalize the string
+    s = s.lower().replace(" ", "")  
     return s == s[::-1]
 
 string = input("Enter a string: ")
