@@ -1,0 +1,22 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+    padding: 0;
+    background-color: #f4f4f4;
+}
+
+h1 {
+    color: #333;
+}
+
+#book-form input, #book-form button {
+    margin: 5px;
+    padding: 10px;
+    font-size: 16px;
+}
+button{
+    margin-left: 10px;
+}
+li{
+    margin-top: 10px;
+}
