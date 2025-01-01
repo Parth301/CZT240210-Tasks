@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/style.css">
+    <title>Car Price Prediction</title>
+</head>
+<body>
+    <h1>Car Price Prediction</h1>
+    <form id="predict-form">
+        <label for="name">Car Name:</label>
+        <input type="text" id="name" name="name" placeholder="Example: Maruti Swift"><br>
+
+        <label for="year">Year:</label>
+        <input type="number" id="year" name="year" placeholder="Example: 2015"><br>
+
+        <label for="km_driven">Kilometers Driven:</label>
+        <input type="number" id="km_driven" name="km_driven" placeholder="Example: 50000"><br>
+
+        <label for="fuel">Fuel Type:</label>
+        <input type="text" id="fuel" name="fuel" placeholder="Example: Petrol"><br>
+
+        <label for="seller_type">Seller Type:</label>
+        <input type="text" id="seller_type" name="seller_type" placeholder="Example: Individual"><br>
+
+        <label for="transmission">Transmission:</label>
+        <input type="text" id="transmission" name="transmission" placeholder="Example: Manual"><br>
+
+        <label for="owner">Owner:</label>
+        <input type="text" id="owner" name="owner" placeholder="Example: First Owner"><br>
+
+        <label for="mileage">Mileage (km/l):</label>
+        <input type="number" id="mileage" name="mileage" placeholder="Example: 20"><br>
+
+        <button type="submit">Predict</button>
+    </form>
+    <div id="result"></div>
+
+    <script>
+        document.getElementById('predict-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            const formData = {
+                name: document.getElementById('name').value,
+                year: document.getElementById('year').value,
+                km_driven: document.getElementById('km_driven').value,
+                fuel: document.getElementById('fuel').value,
+                seller_type: document.getElementById('seller_type').value,
+                transmission: document.getElementById('transmission').value,
+                owner: document.getElementById('owner').value,
+                mileage: document.getElementById('mileage').value
+            };
+
+            fetch('/predict', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    document.getElementById('result').textContent = `Error: ${data.error}`;
+                } else {
+                    document.getElementById('result').textContent = `Predicted Price: ₹${data.predicted_price}`;
+                }
+            });
+        });
+    </script>
+</body>
+</html>
