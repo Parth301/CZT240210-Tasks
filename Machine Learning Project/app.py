@@ -4,26 +4,23 @@ import numpy as np
 
 app = Flask(__name__)
 
-# Load the trained model and label encoders
 model = joblib.load('Car_sales_model.pkl')
 label_encoders = joblib.load('label_encoders.pkl')
 
 def normalize_input(value):
-    # Normalize input to lowercase for case-insensitive matching
     if isinstance(value, str):
         return value.strip().lower()
     return value
 
 def handle_unseen_labels(value, encoder, default_value=0):
-    # Handle unseen labels by checking if the value is in the encoder's classes
     try:
         if value in encoder.classes_:
             return encoder.transform([value])[0]
         else:
-            return default_value  # Return a default value for unseen labels
+            return default_value  
     except Exception as e:
         print(f"Error with label encoding: {e}")
-        return default_value  # Fallback for errors
+        return default_value 
 
 @app.route('/')
 def home():
@@ -32,17 +29,14 @@ def home():
 @app.route('/predict', methods=['POST'])
 def predict():
     try:
-        # Get input data from JSON
+        
         data = request.get_json()
-
-        # Normalize input to handle case differences
         name = normalize_input(data['name'])
         fuel = normalize_input(data['fuel'])
         seller_type = normalize_input(data['seller_type'])
         transmission = normalize_input(data['transmission'])
         owner = normalize_input(data['owner'])
-
-        # Handle unseen labels
+        
         name_encoded = handle_unseen_labels(name, label_encoders['name'])
         fuel_encoded = handle_unseen_labels(fuel, label_encoders['fuel'])
         seller_type_encoded = handle_unseen_labels(seller_type, label_encoders['seller_type'])
@@ -50,7 +44,7 @@ def predict():
         owner_encoded = handle_unseen_labels(owner, label_encoders['owner'])
 
         features = [
-            name_encoded,  # Encoded 'name'
+            name_encoded, 
             int(data['year']),
             int(data['km_driven']),
             label_encoders['fuel'].transform([data['fuel']])[0],
@@ -59,10 +53,10 @@ def predict():
             label_encoders['owner'].transform([data['owner']])[0]
         ]
 
-        # Predict the selling price
+
         prediction = model.predict([features])[0]
 
-        # Return the prediction
+    
         return jsonify({"predicted_price": round(prediction, 2)})
     except Exception as e:
         print("Error during prediction:", str(e))
