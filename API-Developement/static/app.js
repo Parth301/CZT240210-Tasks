@@ -44,7 +44,7 @@ async function addBook() {
     })
     .then(response => response.json())
     .then(() => {
-        fetchBooks(); // Refresh the list of books
+        fetchBooks(); 
     });
 }
 
